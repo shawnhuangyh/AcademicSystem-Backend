@@ -1,25 +1,19 @@
-from django.http import JsonResponse
-from django.shortcuts import render
-
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.permissions import IsAdminUser
+from rest_framework import generics
 
 from App.models import Student
-from App.serializers import StudentListSerializer
+from App.permission.student import IsAdminUserOrReadOnly
+from App.serializers.student import StudentListSerializer, StudentDetailSerializer
 
 
 # Create your views here.
-@api_view(['GET', 'POST'])
-def student_list(request):
-    if request.method == 'GET':
-        student = Student.objects.all()
-        serializer = StudentListSerializer(student, many=True)
-        return Response(serializer.data)
+class StudentList(generics.ListCreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentListSerializer
 
-    elif request.method == 'POST':
-        serializer = StudentListSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentDetailSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
