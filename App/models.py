@@ -19,10 +19,11 @@ class Administrator(models.Model):
 
 
 class Class(models.Model):
-    course = models.OneToOneField('Course', models.DO_NOTHING, primary_key=True)  # The composite primary key (course_id, class_id, semester_id) found, that is not supported. The first column is selected.
-    class_id = models.IntegerField()
+    class_id = models.AutoField(primary_key=True)
+    course = models.ForeignKey('Course', models.DO_NOTHING)
+    class_no = models.IntegerField()
     semester = models.ForeignKey('Semester', models.DO_NOTHING)
-    teacher_id = models.IntegerField()
+    teacher = models.ForeignKey('Teacher', models.DO_NOTHING)
     classroom = models.CharField(max_length=100, blank=True, null=True)
     time = models.CharField(max_length=100, blank=True, null=True)
     current_selection = models.IntegerField(blank=True, null=True)
@@ -31,7 +32,6 @@ class Class(models.Model):
     class Meta:
         managed = False
         db_table = 'class'
-        unique_together = (('course', 'class_id', 'semester'),)
 
 
 class Course(models.Model):
@@ -46,10 +46,9 @@ class Course(models.Model):
 
 
 class CourseSelection(models.Model):
-    student = models.OneToOneField('Student', models.DO_NOTHING, primary_key=True)  # The composite primary key (student_id, course_id, class_id, semester_id) found, that is not supported. The first column is selected.
-    course = models.ForeignKey(Class, models.DO_NOTHING)
-    class_field = models.ForeignKey(Class, models.DO_NOTHING, db_column='class_id', to_field='class_id', related_name='courseselection_class_field_set')  # Field renamed because it was a Python reserved word.
-    semester = models.ForeignKey(Class, models.DO_NOTHING, to_field='semester_id', related_name='courseselection_semester_set')
+    course_selection_id = models.AutoField(primary_key=True)
+    student = models.ForeignKey('Student', models.DO_NOTHING)
+    class_field = models.ForeignKey(Class, models.DO_NOTHING, db_column='class_id')  # Field renamed because it was a Python reserved word.
     gp = models.FloatField(blank=True, null=True, db_comment='General Performance')
     exam = models.FloatField(blank=True, null=True)
     grade = models.FloatField(blank=True, null=True)
@@ -57,7 +56,6 @@ class CourseSelection(models.Model):
     class Meta:
         managed = False
         db_table = 'course_selection'
-        unique_together = (('student', 'course', 'class_field', 'semester'),)
 
 
 class Department(models.Model):
@@ -81,13 +79,13 @@ class Major(models.Model):
 
 
 class MajorPlan(models.Model):
-    major = models.OneToOneField(Major, models.DO_NOTHING, primary_key=True)  # The composite primary key (major_id, course_id) found, that is not supported. The first column is selected.
+    major_plan_id = models.AutoField(primary_key=True)
+    major = models.ForeignKey(Major, models.DO_NOTHING)
     course = models.ForeignKey(Course, models.DO_NOTHING)
 
     class Meta:
         managed = False
         db_table = 'major_plan'
-        unique_together = (('major', 'course'),)
 
 
 class Semester(models.Model):
