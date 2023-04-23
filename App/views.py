@@ -10,6 +10,10 @@ from App.serializers.student import StudentListSerializer, StudentDetailSerializ
 class StudentList(generics.ListCreateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentListSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save()
 
 
 class StudentDetail(generics.RetrieveUpdateDestroyAPIView):

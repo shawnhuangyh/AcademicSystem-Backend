@@ -11,7 +11,6 @@ from django.db import models
 class Administrator(models.Model):
     admin_id = models.CharField(primary_key=True, max_length=100)
     name = models.CharField(max_length=100, blank=True, null=True)
-    password = models.CharField(max_length=9999)
 
     class Meta:
         managed = False
@@ -100,7 +99,6 @@ class Semester(models.Model):
 class Student(models.Model):
     student_id = models.CharField(primary_key=True, max_length=100)
     name = models.CharField(max_length=100, blank=True, null=True)
-    password = models.CharField(max_length=9999)
     gpa = models.FloatField(blank=True, null=True)
     dept = models.ForeignKey(Department, models.DO_NOTHING)
     major = models.ForeignKey(Major, models.DO_NOTHING)
@@ -114,7 +112,6 @@ class Teacher(models.Model):
     teacher_id = models.CharField(primary_key=True, max_length=100)
     name = models.CharField(max_length=100, blank=True, null=True)
     dept = models.ForeignKey(Department, models.DO_NOTHING)
-    password = models.CharField(max_length=9999)
 
     class Meta:
         managed = False
