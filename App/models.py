@@ -101,7 +101,7 @@ class Student(models.Model):
     student_id = models.CharField(primary_key=True, max_length=100)
     name = models.CharField(max_length=100, blank=True, null=True)
     password = models.CharField(max_length=9999)
-    gpa = models.FloatField(db_column='GPA', blank=True, null=True)  # Field name made lowercase.
+    gpa = models.FloatField(blank=True, null=True)
     dept = models.ForeignKey(Department, models.DO_NOTHING)
     major = models.ForeignKey(Major, models.DO_NOTHING)
 
