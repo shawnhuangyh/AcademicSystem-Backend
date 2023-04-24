@@ -3,12 +3,12 @@ from rest_framework import serializers
 
 from App.models import Student, Department, Major
 from App.serializers.department import DepartmentListSerializer
-from App.serializers.major import MajorListSerializer
+from App.serializers.major import MajorSerializer
 
 
 class StudentSerializer(serializers.HyperlinkedModelSerializer):
     dept = DepartmentListSerializer(read_only=True)
-    major = MajorListSerializer(read_only=True)
+    major = MajorSerializer(read_only=True)
 
     class Meta:
         model = Student

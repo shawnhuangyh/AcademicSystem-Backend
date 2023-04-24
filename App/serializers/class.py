@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
-from App.models import Major
+from App.models import Class
 
 
-class MajorSerializer(serializers.ModelSerializer):
+class MajorListSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Major
+        model = Class
         fields = [
             'major_id',
             'name',
