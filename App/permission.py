@@ -14,3 +14,11 @@ class IsAdminUserOrReadOnly(permissions.BasePermission):
 
         # 仅管理员可进行其他操作
         return request.user.is_superuser
+
+
+class IsSelfOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj == request.user or request.user.is_superuser
