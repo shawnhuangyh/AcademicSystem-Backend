@@ -1,23 +1,15 @@
-from rest_framework.permissions import IsAdminUser
-from rest_framework import generics
+from rest_framework import generics, viewsets
 
 from App.models import Student
-from App.permission.student import IsAdminUserOrReadOnly
-from App.serializers.student import StudentListSerializer, StudentDetailSerializer
+from App.permission import IsAdminUserOrReadOnly
+from App.serializers.student import StudentSerializer
 
 
 # Create your views here.
-class StudentList(generics.ListCreateAPIView):
+class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
-    serializer_class = StudentListSerializer
+    serializer_class = StudentSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save()
-
-
-class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentDetailSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
