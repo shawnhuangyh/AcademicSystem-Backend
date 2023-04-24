@@ -22,3 +22,8 @@ class IsSelfOrReadOnly(permissions.BasePermission):
             return True
 
         return obj == request.user or request.user.is_superuser
+
+
+class IsAdminOrTeacher(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_superuser or request.user.is_staff

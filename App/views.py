@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAd
 from rest_framework.response import Response
 
 from App.models import Student, User
-from App.permission import IsAdminUserOrReadOnly, IsSelfOrReadOnly
+from App.permission import IsAdminUserOrReadOnly, IsSelfOrReadOnly, IsAdminOrTeacher
 from App.serializers.student import StudentSerializer
 from App.serializers.user import UserSerializer
 
@@ -15,7 +15,7 @@ class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     lookup_field = 'student_id'
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [IsAdminOrTeacher]
 
     def perform_create(self, serializer):
         django_user = get_user_model()
