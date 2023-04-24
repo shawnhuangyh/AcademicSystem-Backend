@@ -8,7 +8,7 @@ class User(AbstractUser):
 
 class Administrator(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    admin_id = models.CharField(max_length=100, blank=True, null=True)
+    admin_id = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=100, blank=True, null=True)
 
 
@@ -66,7 +66,7 @@ class Semester(models.Model):
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    student_id = models.CharField(max_length=100, blank=True, null=True)
+    student_id = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     gpa = models.FloatField(blank=True, null=True)
     dept = models.ForeignKey(Department, models.DO_NOTHING)
@@ -75,6 +75,6 @@ class Student(models.Model):
 
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    teacher_id = models.CharField(max_length=100, blank=True, null=True)
+    teacher_id = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     dept = models.ForeignKey(Department, models.DO_NOTHING)

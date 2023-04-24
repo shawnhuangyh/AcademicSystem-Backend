@@ -9,6 +9,7 @@ from App.serializers.student import StudentSerializer
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    lookup_field = 'student_id'
     permission_classes = [IsAdminUserOrReadOnly]
 
     def perform_create(self, serializer):
