@@ -4,10 +4,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAdminUser
 from rest_framework.response import Response
 
-from App.models import Student, User, Course
+from App.models import Student, User, Course, Department
 from App.permission import IsAdminUserOrReadOnly, IsSelfOrReadOnly, IsAdminOrTeacher
 from App.serializers.course import CourseSerializer
 from App.serializers.student import StudentSerializer
+from App.serializers.student import DepartmentListSerializer
 from App.serializers.user import UserSerializer
 
 
@@ -46,4 +47,11 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     lookup_field = 'course_id'
+    permission_classes = [IsAdminUserOrReadOnly]
+
+
+class DepartmentViewSet(viewsets.ModelViewSet):
+    queryset = Department.objects.all()
+    serializer_class = DepartmentListSerializer
+    lookup_field = 'department_id'
     permission_classes = [IsAdminUserOrReadOnly]
