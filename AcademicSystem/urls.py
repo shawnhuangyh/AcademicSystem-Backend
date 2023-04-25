@@ -25,12 +25,14 @@ from rest_framework_simplejwt.views import (
 from App import views
 
 router = DefaultRouter()
+router.register(r'class', views.ClassViewSet)
+router.register(r'course', views.CourseViewSet)
+router.register(r'department', views.DepartmentViewSet)
+router.register(r'major', views.MajorViewSet)
+router.register(r'semester', views.SemesterViewSet)
 router.register(r'student', views.StudentViewSet)
 router.register(r'teacher', views.TeacherViewSet)
 router.register(r'user', views.UserViewSet)
-router.register(r'course', views.CourseViewSet)
-router.register(r'class', views.ClassViewSet)
-router.register(r'department', views.DepartmentViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

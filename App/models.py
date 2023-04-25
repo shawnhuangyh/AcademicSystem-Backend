@@ -48,12 +48,6 @@ class Major(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
 
 
-class MajorPlan(models.Model):
-    major_plan_id = models.AutoField(primary_key=True)
-    major = models.ForeignKey(Major, models.DO_NOTHING)
-    course = models.ForeignKey(Course, models.DO_NOTHING)
-
-
 class Semester(models.Model):
     semester_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, blank=True, null=True)
