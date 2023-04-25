@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 
 from App.models import Student, User, Course, Department, Class, Teacher, Major, Semester
 from App.permission import IsAdminUserOrReadOnly, IsSelfOrAdmin, IsAdminOrTeacher
+from App.serializers.course_selection import CourseSelectionSerializer
 from App.serializers.myclass import ClassSerializer
 from App.serializers.course import CourseSerializer
 from App.serializers.department import DepartmentSerializer
@@ -26,6 +27,13 @@ class ClassViewSet(viewsets.ModelViewSet):
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    lookup_field = 'course_id'
+    permission_classes = [IsAdminUserOrReadOnly]
+
+
+class CourseSelectionViewSet(viewsets.ModelViewSet):
+    queryset = Course.objects.all()
+    serializer_class = CourseSelectionSerializer
     lookup_field = 'course_id'
     permission_classes = [IsAdminUserOrReadOnly]
 

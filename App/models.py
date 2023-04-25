@@ -17,6 +17,9 @@ class Class(models.Model):
     current_selection = models.IntegerField(blank=True, null=True)
     max_selection = models.IntegerField(blank=True, null=True)
 
+    class Meta:
+        ordering = ['course']
+
 
 class Course(models.Model):
     course_id = models.CharField(max_length=100, primary_key=True)
