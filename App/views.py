@@ -1,14 +1,16 @@
 from django.contrib.auth import get_user_model
 from rest_framework import generics, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAdminUser
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
-from App.models import Student, User, Course, Department
-from App.permission import IsAdminUserOrReadOnly, IsSelfOrReadOnly, IsAdminOrTeacher
+from App.models import Student, User, Course, Department, Class, Teacher
+from App.permission import IsAdminUserOrReadOnly, IsSelfOrAdmin, IsAdminOrTeacher
 from App.serializers.course import CourseSerializer
 from App.serializers.student import StudentSerializer
-from App.serializers.student import DepartmentListSerializer
+from App.serializers.department import DepartmentSerializer
+from App.serializers.myclass import ClassSerializer
+from App.serializers.teacher import TeacherSerializer
 from App.serializers.user import UserSerializer
 
 
@@ -29,14 +31,30 @@ class StudentViewSet(viewsets.ModelViewSet):
         instance.delete()
 
 
+class TeacherViewSet(viewsets.ModelViewSet):
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
+    lookup_field = 'teacher_id'
+    permission_classes = [IsAdminOrTeacher]
+
+    def perform_create(self, serializer):
+        django_user = get_user_model()
+        user = django_user.objects.create_user(username=serializer.validated_data['teacher_id'], password='password')
+        serializer.save(user=user)
+
+    def perform_destroy(self, instance):
+        instance.user.delete()
+        instance.delete()
+
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'username'
 
     def get_permissions(self):
-        if self.request.method == 'POST':
-            self.permission_classes = [IsAuthenticatedOrReadOnly, IsSelfOrReadOnly]
+        if self.request.method == 'PUT':
+            self.permission_classes = [IsSelfOrAdmin]
         else:
             self.permission_classes = [IsAdminUser]
 
@@ -50,8 +68,15 @@ class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
+class ClassViewSet(viewsets.ModelViewSet):
+    queryset = Class.objects.all()
+    serializer_class = ClassSerializer
+    lookup_field = 'class_id'
+    permission_classes = [IsAdminUserOrReadOnly]
+
+
 class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
-    serializer_class = DepartmentListSerializer
-    lookup_field = 'department_id'
+    serializer_class = DepartmentSerializer
+    lookup_field = 'dept_id'
     permission_classes = [IsAdminUserOrReadOnly]

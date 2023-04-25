@@ -1,18 +1,18 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from App.models import Major, Course, Department
+from App.models import Department, Teacher
 from App.serializers.department import DepartmentSerializer
 
 
-class CourseSerializer(serializers.HyperlinkedModelSerializer):
+class TeacherSerializer(serializers.HyperlinkedModelSerializer):
     dept = DepartmentSerializer(read_only=True)
 
     class Meta:
-        model = Course
+        model = Teacher
         fields = [
-            'course_id',
+            'teacher_id',
             'name',
-            'gp_percentage',
             'dept',
         ]
 
@@ -20,4 +20,4 @@ class CourseSerializer(serializers.HyperlinkedModelSerializer):
         dept_id = self.initial_data.get('dept_id', None)
         dept = Department.objects.get(pk=dept_id)
         validated_data.update(dept=dept)
-        return super(CourseSerializer, self).create(validated_data)
+        return super(TeacherSerializer, self).create(validated_data)

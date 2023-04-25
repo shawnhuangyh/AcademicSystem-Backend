@@ -6,16 +6,10 @@ class User(AbstractUser):
     pass
 
 
-class Administrator(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    admin_id = models.CharField(max_length=100, unique=True)
-    name = models.CharField(max_length=100, blank=True, null=True)
-
-
 class Class(models.Model):
     class_id = models.AutoField(primary_key=True)
     course = models.ForeignKey('Course', models.DO_NOTHING)
-    class_no = models.IntegerField()
+    class_no = models.CharField(max_length=100)
     semester = models.ForeignKey('Semester', models.DO_NOTHING)
     teacher = models.ForeignKey('Teacher', models.DO_NOTHING)
     classroom = models.CharField(max_length=100, blank=True, null=True)
@@ -25,7 +19,7 @@ class Class(models.Model):
 
 
 class Course(models.Model):
-    course_id = models.AutoField(primary_key=True)
+    course_id = models.CharField(max_length=100, primary_key=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     gp_percentage = models.FloatField(blank=True, null=True, db_comment='General Performance Percentage')
     dept = models.ForeignKey('Department', models.DO_NOTHING, blank=True, null=True)
