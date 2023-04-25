@@ -22,6 +22,7 @@ class Course(models.Model):
     course_id = models.CharField(max_length=100, primary_key=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     gp_percentage = models.FloatField(blank=True, null=True, db_comment='General Performance Percentage')
+    credit = models.IntegerField(blank=True, null=True)
     dept = models.ForeignKey('Department', models.DO_NOTHING, blank=True, null=True)
 
 

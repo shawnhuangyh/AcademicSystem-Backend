@@ -12,6 +12,7 @@ class CourseSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'course_id',
             'name',
+            'credit',
             'gp_percentage',
             'dept',
         ]
