@@ -3,7 +3,7 @@ from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import action
 
-from App.models import Student, User, Course, Department, Class, Teacher, Major, Semester
+from App.models import Student, User, Course, Department, Class, Teacher, Major, Semester, CourseSelection
 from App.permission import IsAdminUserOrReadOnly, IsSelfOrAdmin, IsAdminOrTeacher
 from App.serializers.course_selection import CourseSelectionSerializer
 from App.serializers.myclass import ClassSerializer
@@ -32,9 +32,9 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class CourseSelectionViewSet(viewsets.ModelViewSet):
-    queryset = Course.objects.all()
+    queryset = CourseSelection.objects.all()
     serializer_class = CourseSelectionSerializer
-    lookup_field = 'course_id'
+    lookup_field = 'course_selection_id'
     permission_classes = [IsAdminUserOrReadOnly]
 
 

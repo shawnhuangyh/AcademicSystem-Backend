@@ -12,12 +12,16 @@ class CourseSelectionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CourseSelection
         fields = [
+            'course_selection_id',
             'student',
             'class_field',
             'gp',
             'exam',
             'grade',
         ]
+        extra_kwargs = {
+            'grade': {'read_only': True}
+        }
 
     def create(self, validated_data):
         student_id = self.initial_data.get('student_id', None)

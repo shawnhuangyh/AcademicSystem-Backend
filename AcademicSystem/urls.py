@@ -27,6 +27,7 @@ from App import views
 router = DefaultRouter()
 router.register(r'class', views.ClassViewSet)
 router.register(r'course', views.CourseViewSet)
+router.register(r'course_selection', views.CourseSelectionViewSet)
 router.register(r'department', views.DepartmentViewSet)
 router.register(r'major', views.MajorViewSet)
 router.register(r'semester', views.SemesterViewSet)
