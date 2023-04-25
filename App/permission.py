@@ -17,10 +17,18 @@ class IsAdminUserOrReadOnly(permissions.BasePermission):
 
 
 class IsSelfOrAdmin(permissions.BasePermission):
+    """
+    仅自己和管理员用户有权限
+    """
+
     def has_object_permission(self, request, view, obj):
         return obj == request.user or request.user.is_superuser
 
 
 class IsAdminOrTeacher(permissions.BasePermission):
+    """
+    仅教师和管理员用户有权限
+    """
+
     def has_permission(self, request, view):
         return request.user.is_superuser or request.user.is_staff

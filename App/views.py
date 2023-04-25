@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import action
@@ -22,6 +23,8 @@ class ClassViewSet(viewsets.ModelViewSet):
     serializer_class = ClassSerializer
     lookup_field = 'class_id'
     permission_classes = [IsAdminUserOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['class_id', 'course__course_id', 'course__name', 'class_no', 'teacher__name']
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -29,38 +32,52 @@ class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     lookup_field = 'course_id'
     permission_classes = [IsAdminUserOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['course_id', 'name', 'dept__name']
 
 
 class CourseSelectionViewSet(viewsets.ModelViewSet):
     queryset = CourseSelection.objects.all()
     serializer_class = CourseSelectionSerializer
     lookup_field = 'course_selection_id'
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [IsAdminUser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['student__student_id', 'student__name', 'class_field__course__course_id',
+                        'class_field__course__name', 'class_field__class_no', 'class_field__teacher__name',
+                        'class_field__teacher__teacher_id', 'class_field__class_id']
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['dept_id', 'name']
 
 
 class MajorViewSet(viewsets.ModelViewSet):
     queryset = Major.objects.all()
     serializer_class = MajorSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['major_id', 'name']
 
 
 class SemesterViewSet(viewsets.ModelViewSet):
     queryset = Semester.objects.all()
     serializer_class = SemesterSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['semester_id', 'name']
 
 
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     lookup_field = 'student_id'
-    permission_classes = [IsAdminOrTeacher]
+    permission_classes = [IsAdminUser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['student_id', 'name', 'dept__dept_id', 'dept__name', 'major__major_id', 'major__name']
 
     def perform_create(self, serializer):
         django_user = get_user_model()
@@ -76,7 +93,10 @@ class TeacherViewSet(viewsets.ModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
     lookup_field = 'teacher_id'
-    permission_classes = [IsAdminOrTeacher]
+    permission_classes = [IsAdminUser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['teacher_id', 'name', 'dept__dept_id', 'dept__name']
+
 
     def perform_create(self, serializer):
         django_user = get_user_model()
