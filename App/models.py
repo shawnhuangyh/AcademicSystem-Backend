@@ -9,13 +9,13 @@ class User(AbstractUser):
 class Class(models.Model):
     class_id = models.AutoField(primary_key=True)
     course = models.ForeignKey('Course', models.DO_NOTHING)
-    class_no = models.CharField(max_length=100)
     semester = models.ForeignKey('Semester', models.DO_NOTHING)
     teacher = models.ForeignKey('Teacher', models.DO_NOTHING)
     classroom = models.CharField(max_length=100, blank=True, null=True)
     time = models.CharField(max_length=100, blank=True, null=True)
     current_selection = models.IntegerField(blank=True, null=True)
     max_selection = models.IntegerField(blank=True, null=True)
+    remaining_selection = models.IntegerField(blank=True, null=True)
 
     class Meta:
         ordering = ['course']

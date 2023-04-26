@@ -16,14 +16,15 @@ class ClassSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'class_id',
             'course',
-            'class_no',
             'semester',
             'teacher',
             'classroom',
             'time',
             'current_selection',
             'max_selection',
+            'remaining_selection'
         ]
+        read_only_fields = ['current_selection', 'remaining_selection']
 
     def create(self, validated_data):
         course_id = self.initial_data.get('course_id', None)

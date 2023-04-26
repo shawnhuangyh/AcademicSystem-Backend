@@ -19,9 +19,7 @@ class CourseSelectionSerializer(serializers.HyperlinkedModelSerializer):
             'exam',
             'grade',
         ]
-        extra_kwargs = {
-            'grade': {'read_only': True}
-        }
+        read_only_fields = ['grade']
 
     def create(self, validated_data):
         student_id = self.initial_data.get('student_id', None)

@@ -24,7 +24,12 @@ class ClassViewSet(viewsets.ModelViewSet):
     lookup_field = 'class_id'
     permission_classes = [IsAdminUserOrReadOnly]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['class_id', 'course__course_id', 'course__name', 'class_no', 'teacher__name']
+    filterset_fields = {'class_id': ['icontains'],
+                        'course__course_id': ['icontains'],
+                        'course__name': ['icontains'],
+                        'teacher__name': ['icontains'],
+                        'remaining_selection': ['gte'],
+                        }
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -96,7 +101,6 @@ class TeacherViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['teacher_id', 'name', 'dept__dept_id', 'dept__name']
-
 
     def perform_create(self, serializer):
         django_user = get_user_model()
