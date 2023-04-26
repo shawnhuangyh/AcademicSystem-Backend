@@ -79,6 +79,12 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
             return Response({'Error': 'Already have grades'}, status=status.HTTP_403_FORBIDDEN)
         return Response({'Error': 'Invalid Login Credentials'}, status=status.HTTP_403_FORBIDDEN)
 
+    @action(methods=['get'], detail=False, permission_classes=[IsAdminUserOrReadOnly], url_path='info')
+    def info(self, request):
+        queryset = CourseSelection.objects.filter(student__student_id=request.user.username)
+        serializer = CourseSelectionSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
@@ -120,6 +126,12 @@ class StudentViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         instance.user.delete()
         instance.delete()
+
+    @action(methods=['get'], detail=False, permission_classes=[IsAdminUserOrReadOnly], url_path='info')
+    def info(self, request):
+        queryset = Student.objects.get(student_id=request.user.username)
+        serializer = StudentSerializer(queryset, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TeacherViewSet(viewsets.ModelViewSet):
