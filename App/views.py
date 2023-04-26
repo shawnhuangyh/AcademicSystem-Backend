@@ -1,12 +1,13 @@
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from App.models import Student, User, Course, Department, Class, Teacher, Major, Semester, CourseSelection
 from App.permission import IsAdminUserOrReadOnly, IsSelfOrAdmin, IsAdminOrTeacher
-from App.serializers.course_selection import CourseSelectionSerializer
+from App.serializers.course_selection import CourseSelectionSerializer, StudentSelectSerializer
 from App.serializers.myclass import ClassSerializer
 from App.serializers.course import CourseSerializer
 from App.serializers.department import DepartmentSerializer
@@ -48,8 +49,35 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['student__student_id', 'student__name', 'class_field__course__course_id',
-                        'class_field__course__name', 'class_field__class_no', 'class_field__teacher__name',
+                        'class_field__course__name', 'class_field__teacher__name',
                         'class_field__teacher__teacher_id', 'class_field__class_id']
+
+    @action(methods=['post'], detail=False, permission_classes=[IsSelfOrAdmin], url_path='enroll')
+    def enroll(self, request):
+        serializer = StudentSelectSerializer(data=request.data)
+        if request.user.username == serializer.initial_data['student_id'] or request.user.is_superuser:
+            if serializer.is_valid():
+                queryset = CourseSelection.objects.filter(student__student_id=request.data['student_id'],
+                                                          class_field__class_id=request.data['class_id'])
+                if queryset:
+                    return Response({'Error': 'Already exists'}, status=status.HTTP_403_FORBIDDEN)
+                else:
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'Error': 'Invalid Login Credentials'}, status=status.HTTP_403_FORBIDDEN)
+
+    @action(methods=['post'], detail=False, permission_classes=[IsSelfOrAdmin], url_path='drop')
+    def drop(self, request):
+        queryset = CourseSelection.objects.get(student__student_id=request.data['student_id'],
+                                               class_field__class_id=request.data['class_id'])
+        serializer = StudentSelectSerializer(queryset, many=False)
+        if request.user.username == serializer.data['student']['student_id'] or request.user.is_superuser:
+            if serializer.data['can_drop'] == 1:
+                queryset.delete()
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            return Response({'Error': 'Already have grades'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'Error': 'Invalid Login Credentials'}, status=status.HTTP_403_FORBIDDEN)
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
