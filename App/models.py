@@ -23,12 +23,16 @@ class Class(models.Model):
     time = models.CharField(max_length=10, choices=TIME_CHOICE, default="一")
     start = models.IntegerField(blank=True, null=True)
     end = models.IntegerField(blank=True, null=True)
-    current_selection = models.IntegerField(blank=True, null=True)
-    max_selection = models.IntegerField(blank=True, null=True)
+    current_selection = models.IntegerField(default=0)
+    max_selection = models.IntegerField(default=50)
     remaining_selection = models.IntegerField(blank=True, null=True)
 
     class Meta:
         ordering = ['course']
+        constraints = [
+            models.UniqueConstraint(fields=['teacher', 'time', 'start', 'end'], name='teacher_time'),
+            models.UniqueConstraint(fields=['time', 'start', 'end', 'classroom'], name='time_classroom'),
+        ]
 
 
 class Course(models.Model):
@@ -48,6 +52,11 @@ class CourseSelection(models.Model):
     exam = models.FloatField(blank=True, null=True)
     grade = models.FloatField(blank=True, null=True)
     can_drop = models.BooleanField(default=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['student', 'class_field'], name='course_selection'),
+        ]
 
 
 class Department(models.Model):
