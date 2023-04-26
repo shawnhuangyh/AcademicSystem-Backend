@@ -25,10 +25,10 @@ class ClassViewSet(viewsets.ModelViewSet):
     lookup_field = 'class_id'
     permission_classes = [IsAdminUserOrReadOnly]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = {'class_id': ['icontains'],
-                        'course__course_id': ['icontains'],
-                        'course__name': ['icontains'],
-                        'teacher__name': ['icontains'],
+    filterset_fields = {'class_id': ["exact", "icontains"],
+                        'course__course_id': ["exact", "icontains"],
+                        'course__name': ["exact", "icontains"],
+                        'teacher__name': ["exact", "icontains"],
                         'remaining_selection': ['gte'],
                         }
 

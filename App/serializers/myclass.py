@@ -20,6 +20,8 @@ class ClassSerializer(serializers.HyperlinkedModelSerializer):
             'teacher',
             'classroom',
             'time',
+            'start',
+            'end',
             'current_selection',
             'max_selection',
             'remaining_selection'
