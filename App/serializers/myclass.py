@@ -49,12 +49,9 @@ class ClassSerializer(serializers.HyperlinkedModelSerializer):
         teacher_id = self.initial_data.get('teacher_id', None)
         if course_id is not None:
             course = Course.objects.get(pk=course_id)
-            class_instance.course = course
         if semester_id is not None:
             semester = Semester.objects.get(pk=semester_id)
-            class_instance.semester = semester
         if teacher_id is not None:
             teacher = Teacher.objects.get(teacher_id=teacher_id)
-            class_instance.teacher = teacher
         validated_data.update(course=course, semester=semester, teacher=teacher)
         return super(ClassSerializer, self).update(class_instance, validated_data)

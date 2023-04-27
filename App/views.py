@@ -30,6 +30,7 @@ class ClassViewSet(viewsets.ModelViewSet):
                         'course__name': ["exact", "icontains"],
                         'teacher__name': ["exact", "icontains"],
                         'remaining_selection': ['gte'],
+                        'semester__semester_id': ['exact', 'icontains'],
                         }
 
 
