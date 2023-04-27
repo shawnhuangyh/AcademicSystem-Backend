@@ -15,7 +15,7 @@ from App.serializers.major import MajorSerializer
 from App.serializers.semester import SemesterSerializer
 from App.serializers.student import StudentSerializer
 from App.serializers.teacher import TeacherSerializer
-from App.serializers.user import UserSerializer
+from App.serializers.user import UserSerializer, UserRoleSerializer
 
 
 # Create your views here.
@@ -144,7 +144,8 @@ class TeacherViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         django_user = get_user_model()
-        user = django_user.objects.create_user(username=serializer.validated_data['teacher_id'], password='password')
+        user = django_user.objects.create_user(username=serializer.validated_data['teacher_id'], password='password',
+                                               is_staff=True)
         serializer.save(user=user)
 
     def perform_destroy(self, instance):
@@ -161,6 +162,12 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.request.method == 'PUT':
             self.permission_classes = [IsSelfOrAdmin]
         else:
-            self.permission_classes = [IsAdminUser]
+            self.permission_classes = [IsAdminUserOrReadOnly]
 
         return super().get_permissions()
+
+    @action(methods=['get'], detail=False, permission_classes=[IsAdminUserOrReadOnly], url_path='role')
+    def role(self, request):
+        queryset = User.objects.get(username=request.user.username)
+        serializer = UserRoleSerializer(queryset, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)

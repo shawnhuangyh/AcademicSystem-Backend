@@ -20,3 +20,14 @@ class UserSerializer(serializers.ModelSerializer):
             password = validated_data.pop('password')
             instance.set_password(password)
         return super().update(instance, validated_data)
+
+
+class UserRoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'is_superuser',
+            'is_staff',
+        ]
+        read_only_fields = ['is_superuser', 'is_staff']
