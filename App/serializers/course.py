@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from App.models import Major, Course, Department
+from App.models import Course, Department
 from App.serializers.department import DepartmentSerializer
 
 
