@@ -16,6 +16,7 @@ class StudentSerializer(serializers.HyperlinkedModelSerializer):
             'gpa',
             'dept',
         ]
+        read_only_fields = ['gpa']
 
     def create(self, validated_data):
         dept_id = self.initial_data.get('dept_id', None)
