@@ -38,9 +38,9 @@ class CourseSelectionSerializer(serializers.HyperlinkedModelSerializer):
         student_id = self.initial_data.get('student_id', None)
         class_id = self.initial_data.get('class_id', None)
         if student_id is not None:
-            student = Student.objects.get(pk=student_id)
+            student = Student.objects.get(student_id=student_id)
         if class_id is not None:
-            class_field = Student.objects.get(pk=class_field)
+            class_field = Class.objects.get(pk=class_id)
         validated_data.update(student=student, class_field=class_field)
         return super(CourseSelectionSerializer, self).update(course_selection, validated_data)
 
