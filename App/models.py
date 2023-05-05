@@ -51,6 +51,7 @@ class CourseSelection(models.Model):
     gp = models.FloatField(blank=True, null=True, db_comment='General Performance')
     exam = models.FloatField(blank=True, null=True)
     grade = models.FloatField(blank=True, null=True)
+    gpa = models.FloatField(blank=True, null=True)
     can_drop = models.BooleanField(default=True)
 
     class Meta:
