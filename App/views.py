@@ -85,7 +85,7 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
             return Response({'Error': 'Already have grades'}, status=status.HTTP_403_FORBIDDEN)
         return Response({'Error': 'Invalid Login Credentials'}, status=status.HTTP_403_FORBIDDEN)
 
-    @action(methods=['get'], detail=False, permission_classes=[IsAdminUserOrReadOnly], url_path='info')
+    @action(methods=['post'], detail=False, permission_classes=[IsSelfOrAdmin], url_path='info')
     def info(self, request):
         semester = request.data['semester_id']
         queryset = CourseSelection.objects.filter(student__student_id=request.user.username,
