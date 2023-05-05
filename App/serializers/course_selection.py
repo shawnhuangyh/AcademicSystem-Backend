@@ -21,7 +21,6 @@ class CourseSelectionSerializer(serializers.HyperlinkedModelSerializer):
             'grade',
             'can_drop',
         ]
-        read_only_fields = ['grade', 'gpa']
 
     def create(self, validated_data):
         student_id = self.initial_data.get('student_id', None)

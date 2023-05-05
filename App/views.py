@@ -48,9 +48,15 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
     lookup_field = 'course_selection_id'
     permission_classes = [IsAdminUser]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['student__student_id', 'student__name', 'class_field__course__course_id',
-                        'class_field__course__name', 'class_field__teacher__name',
-                        'class_field__teacher__teacher_id', 'class_field__class_id']
+    filterset_fields = {'student__student_id': ["exact", "icontains"],
+                        'student__name': ["exact", "icontains"],
+                        'class_field__course__course_id': ["exact", "icontains"],
+                        'class_field__course__name': ["exact", "icontains"],
+                        'class_field__teacher__name': ["exact", "icontains"],
+                        'class_field__teacher__teacher_id': ["exact", "icontains"],
+                        'class_field__class_id': ["exact", "icontains"],
+                        'class_field__semester__semester_id': ["exact"]
+                        }
 
     @action(methods=['post'], detail=False, permission_classes=[IsSelfOrAdmin], url_path='enroll')
     def enroll(self, request):
