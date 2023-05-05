@@ -87,7 +87,9 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=False, permission_classes=[IsAdminUserOrReadOnly], url_path='info')
     def info(self, request):
-        queryset = CourseSelection.objects.filter(student__student_id=request.user.username)
+        semester = request.data['semester_id']
+        queryset = CourseSelection.objects.filter(student__student_id=request.user.username,
+                                                  class_field__semester__semester_id=semester)
         serializer = CourseSelectionSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
