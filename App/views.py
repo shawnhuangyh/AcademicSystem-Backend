@@ -27,6 +27,7 @@ class ClassViewSet(viewsets.ModelViewSet):
     filterset_fields = {'class_id': ["exact", "icontains"],
                         'course__course_id': ["exact", "icontains"],
                         'course__name': ["exact", "icontains"],
+                        'teacher__teacher_id': ["exact", "icontains"],
                         'teacher__name': ["exact", "icontains"],
                         'remaining_selection': ['gte'],
                         'semester__semester_id': ['exact', 'icontains'],
@@ -91,6 +92,28 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
         queryset = CourseSelection.objects.filter(student__student_id=request.user.username,
                                                   class_field__semester__semester_id=semester)
         serializer = CourseSelectionSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['post'], detail=False, permission_classes=[IsAdminOrTeacher], url_path='teacher_info')
+    def teacher_info(self, request):
+        semester = request.data['semester_id']
+        queryset = CourseSelection.objects.filter(class_field__teacher__teacher_id=request.user.username,
+                                                  class_field__semester__semester_id=semester)
+        serializer = CourseSelectionSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['post'], detail=False, permission_classes=[IsAdminOrTeacher], url_path='teacher_score')
+    def teacher_score(self, request):
+        course_selection_id = request.data['course_selection_id']
+        queryset = CourseSelection.objects.get(pk=course_selection_id)
+        if request.data['gp'] != '':
+            gp = request.data['gp']
+            queryset.gp = gp
+        if request.data['exam'] != '':
+            exam = request.data['exam']
+            queryset.exam = exam
+        queryset.save()
+        serializer = CourseSelectionSerializer(queryset, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
