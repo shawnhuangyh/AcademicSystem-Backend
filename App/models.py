@@ -66,11 +66,6 @@ class Department(models.Model):
     phone = models.CharField(max_length=100, blank=True, null=True)
 
 
-class Major(models.Model):
-    major_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100, blank=True, null=True)
-
-
 class Semester(models.Model):
     semester_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, blank=True, null=True)
@@ -82,7 +77,6 @@ class Student(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     gpa = models.FloatField(blank=True, null=True)
     dept = models.ForeignKey(Department, models.DO_NOTHING)
-    major = models.ForeignKey(Major, models.DO_NOTHING)
 
 
 class Teacher(models.Model):

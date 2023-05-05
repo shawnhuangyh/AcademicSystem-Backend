@@ -5,13 +5,12 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from App.models import Student, User, Course, Department, Class, Teacher, Major, Semester, CourseSelection
+from App.models import Student, User, Course, Department, Class, Teacher, Semester, CourseSelection
 from App.permission import IsAdminUserOrReadOnly, IsSelfOrAdmin, IsAdminOrTeacher
 from App.serializers.course_selection import CourseSelectionSerializer, StudentSelectSerializer
 from App.serializers.myclass import ClassSerializer
 from App.serializers.course import CourseSerializer
 from App.serializers.department import DepartmentSerializer
-from App.serializers.major import MajorSerializer
 from App.serializers.semester import SemesterSerializer
 from App.serializers.student import StudentSerializer
 from App.serializers.teacher import TeacherSerializer
@@ -95,14 +94,6 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     filterset_fields = ['dept_id', 'name']
 
 
-class MajorViewSet(viewsets.ModelViewSet):
-    queryset = Major.objects.all()
-    serializer_class = MajorSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['major_id', 'name']
-
-
 class SemesterViewSet(viewsets.ModelViewSet):
     queryset = Semester.objects.all()
     serializer_class = SemesterSerializer
@@ -117,7 +108,7 @@ class StudentViewSet(viewsets.ModelViewSet):
     lookup_field = 'student_id'
     permission_classes = [IsAdminUser]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['student_id', 'name', 'dept__dept_id', 'dept__name', 'major__major_id', 'major__name']
+    filterset_fields = ['student_id', 'name', 'dept__dept_id', 'dept__name']
 
     def perform_create(self, serializer):
         django_user = get_user_model()
