@@ -175,6 +175,12 @@ class TeacherViewSet(viewsets.ModelViewSet):
         instance.user.delete()
         instance.delete()
 
+    @action(methods=['get'], detail=False, permission_classes=[IsAdminUserOrReadOnly], url_path='info')
+    def info(self, request):
+        queryset = Teacher.objects.get(teacher_id=request.user.username)
+        serializer = TeacherSerializer(queryset, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
